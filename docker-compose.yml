@@ -1,0 +1,55 @@
+services:
+  postgres_db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: micro_user
+      POSTGRES_PASSWORD: micro_password123
+      POSTGRES_DB: auth_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  auth_service:
+    build:
+      context: ./auth_service
+    container_name: auth_service
+    env_file:
+      - .env
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./auth_service:/app
+    depends_on:
+      - postgres_db
+
+  data_processing_engine:
+    build:
+      context: ./data_processing_engine
+    container_name: data_processing_engine
+    env_file:
+      - .env
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./data_processing_engine:/app
+    depends_on:
+      - postgres_db
+
+  gateway:
+    build:
+      context: ./gateway
+    container_name: gateway
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - auth_service
+      - data_processing_engine
+    volumes:
+      - ./gateway:/app
+
+volumes:
+  postgres_data:
