@@ -26,8 +26,9 @@ async def read_dashboard(request: Request):
     except Exception:
         system_metrics["api_health"] = "Degraded (Gateway Unreachable)"
 
-    # Explicitly naming the template name and context map fixes the unhashable dict error
+    # Pass request as the first positional argument to match modern Starlette signatures
     return templates.TemplateResponse(
-        name="index.html", 
-        context={"request": request, "metrics": system_metrics}
+        request,
+        "index.html", 
+        {"metrics": system_metrics}
     )
