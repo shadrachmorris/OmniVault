@@ -5,10 +5,10 @@ databases:
     user: micro_user
 
 services:
-  - type: pservice
+  - type: pserv
     name: auth-service
     env: docker
-    plan: free
+    plan: starter
     dockerfilePath: auth_service/Dockerfile
     dockerContext: auth_service
     envVars:
@@ -19,10 +19,10 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
 
-  - type: pservice
+  - type: pserv
     name: processing-engine
     env: docker
-    plan: free
+    plan: starter
     dockerfilePath: data_processing_engine/Dockerfile
     dockerContext: data_processing_engine
     envVars:
