@@ -42,3 +42,15 @@ services:
         value: http://auth-service:8000
       - key: PROCESSING_ENGINE_URL
         value: http://processing-engine:8000
+
+  - type: web
+    name: frontend-dashboard
+    env: docker
+    plan: free
+    dockerfilePath: frontend/Dockerfile
+    dockerContext: frontend
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: API_GATEWAY_URL
+        value: http://api-gateway:8000
