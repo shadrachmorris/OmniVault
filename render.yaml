@@ -1,0 +1,43 @@
+databases:
+  - name: postgres-db
+    plan: free
+    databaseName: micro_db
+    user: micro_user
+
+services:
+  - type: pservice
+    name: auth-service
+    env: docker
+    plan: free
+    dockerfilePath: auth_service/Dockerfile
+    dockerContext: auth_service
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: postgres-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+
+  - type: pservice
+    name: processing-engine
+    env: docker
+    plan: free
+    dockerfilePath: data_processing_engine/Dockerfile
+    dockerContext: data_processing_engine
+    envVars:
+      - key: AUTH_SERVICE_URL
+        value: http://auth-service:8000
+
+  - type: web
+    name: api-gateway
+    env: docker
+    plan: free
+    dockerfilePath: gateway/Dockerfile
+    dockerContext: gateway
+    port: 8000
+    envVars:
+      - key: AUTH_SERVICE_URL
+        value: http://auth-service:8000
+      - key: PROCESSING_ENGINE_URL
+        value: http://processing-engine:8000
