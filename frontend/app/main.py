@@ -11,7 +11,6 @@ API_GATEWAY_URL = os.getenv("API_GATEWAY_URL", "http://api-gateway:8000")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_dashboard(request: Request):
-    # Default placeholder data for a clean UI initialization
     system_metrics = {
         "total_users": 128,
         "active_sessions": 42,
@@ -19,7 +18,6 @@ async def read_dashboard(request: Request):
         "api_health": "Healthy"
     }
     
-    # Try fetching real-time data from the API Gateway if available
     try:
         async with httpx.AsyncClient(timeout=2.0) as client:
             response = await client.get(f"{API_GATEWAY_URL}/health")
@@ -28,7 +26,8 @@ async def read_dashboard(request: Request):
     except Exception:
         system_metrics["api_health"] = "Degraded (Gateway Unreachable)"
 
+    # Explicitly naming the template name and context map fixes the unhashable dict error
     return templates.TemplateResponse(
-        "index.html", 
-        {"request": request, "metrics": system_metrics}
+        name="index.html", 
+        context={"request": request, "metrics": system_metrics}
     )
