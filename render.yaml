@@ -1,11 +1,12 @@
 ﻿services:
   - type: web
     name: draft2code-backend
-    env: docker
+    runtime: docker
     region: ohio
-    dockerfilePath: ./backend/Dockerfile
+    rootDir: gateway
+    dockerfilePath: Dockerfile
 
   - type: web
     name: draft2code-frontend
-    env: static
+    runtime: static
     staticPublishPath: ./frontend
