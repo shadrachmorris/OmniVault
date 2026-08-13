@@ -1,56 +1,15 @@
-databases:
-  - name: postgres-db
-    plan: free
-    databaseName: micro_db
-    user: micro_user
-
-services:
-  - type: pserv
-    name: auth-service
-    env: docker
-    plan: starter
-    dockerfilePath: auth_service/Dockerfile
-    dockerContext: auth_service
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: postgres-db
-          property: connectionString
-      - key: JWT_SECRET_KEY
-        generateValue: true
-
-  - type: pserv
-    name: processing-engine
-    env: docker
-    plan: starter
-    dockerfilePath: data_processing_engine/Dockerfile
-    dockerContext: data_processing_engine
-    envVars:
-      - key: AUTH_SERVICE_URL
-        value: http://auth-service:8000
-
+﻿services:
   - type: web
-    name: api-gateway
-    env: docker
-    plan: free
-    dockerfilePath: gateway/Dockerfile
-    dockerContext: gateway
+    name: draft2code-backend
+    env: python
+    region: ohio
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port 
     envVars:
-      - key: PORT
-        value: 8000
-      - key: AUTH_SERVICE_URL
-        value: http://auth-service:8000
-      - key: PROCESSING_ENGINE_URL
-        value: http://processing-engine:8000
+      - key: PYTHON_VERSION
+        value: 3.10.0
 
-  - type: web
-    name: frontend-dashboard
-    env: docker
-    plan: free
-    dockerfilePath: frontend/Dockerfile
-    dockerContext: frontend
-    envVars:
-      - key: PORT
-        value: 8080
-      - key: API_GATEWAY_URL
-        value: http://api-gateway:8000
+  - type: static
+    name: draft2code-frontend
+    region: ohio
+    staticPublishPath: ./frontend
