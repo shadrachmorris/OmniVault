@@ -11,6 +11,5 @@
 
   - type: web
     name: draft2code-frontend
-    region: ohio
     env: static
     staticPublishPath: ./frontend
