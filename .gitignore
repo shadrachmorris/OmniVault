@@ -2,3 +2,37 @@
 __pycache__/
 *.pyc
 postgres_data/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+
+# Development backups
+frontend_backup/
+frontend_before_integrated/
+frontend_before_shop/
+frontend/frontend/
+frontend/index_backup.html
+gateway/main_backup.py
+
+# ZIP archives
+*.zip
+
+# OS and editor files
+.DS_Store
+.vscode/

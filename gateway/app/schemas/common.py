@@ -11,5 +11,6 @@ class SubmitResponse(BaseModel):
 
 class TokenValidationResult(BaseModel):
     valid: bool
-    subject: Optional[str] = None
-    detail: Optional[str] = None
+    subject: str | None = None
+    user_id: int | None = None
+    detail: str | None = None

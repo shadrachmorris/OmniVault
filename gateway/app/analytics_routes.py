@@ -18,6 +18,8 @@ async def finance_get(
     user_id: int,
     year: int | None = None,
     month: int | None = None,
+days: int | None = None,
+
 ):
     params = {"user_id": user_id}
 
@@ -26,6 +28,9 @@ async def finance_get(
 
     if month is not None:
         params["month"] = month
+
+    if days is not None:
+    	params["days"] = days
 
     url = (
         settings.processing_service_url.rstrip("/")
@@ -101,4 +106,14 @@ async def budget_progress(
         user_id=user["user_id"],
         year=year,
         month=month,
+    )
+@router.get("/forecast")
+async def forecast(
+    days: int = Query(default=30, ge=7, le=365),
+    user: dict = Depends(require_valid_token),
+):
+    return await finance_get(
+        "/finance/forecast",
+        user_id=user["user_id"],
+        days=days,
     )

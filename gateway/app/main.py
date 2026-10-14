@@ -473,3 +473,17 @@ async def submit_payload(
 # ---------------------------------------------------------
 
 app.include_router(analytics_router)
+
+from app.subscription_routes import (
+    router as subscription_management_router,
+)
+
+app.include_router(subscription_management_router)
+
+from app.omnivault_routes import router as omnivault_router
+
+app.include_router(omnivault_router)
+
+from app.intelligence_routes import router as intelligence_router
+
+app.include_router(intelligence_router)

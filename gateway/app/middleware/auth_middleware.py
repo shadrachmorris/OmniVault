@@ -1,14 +1,29 @@
-from fastapi import Header, HTTPException, status
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+
 from app.clients.auth_client import auth_client
 
-async def require_valid_token(authorization: str = Header(None)) -> str:
-    if not authorization or not authorization.lower().startswith("bearer "):
+
+bearer_scheme = HTTPBearer(auto_error=False)
+
+
+async def require_valid_token(
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+) -> str:
+    if credentials is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing or malformed Authorization header",
+            detail="Missing Authorization header",
         )
 
-    token = authorization.split(" ", 1)[1].strip()
+    if credentials.scheme.lower() != "bearer":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Malformed Authorization header",
+        )
+
+    token = credentials.credentials
+
     result = await auth_client.validate_token(token)
 
     if not result.valid:
@@ -17,4 +32,7 @@ async def require_valid_token(authorization: str = Header(None)) -> str:
             detail=result.detail or "Invalid token",
         )
 
-    return result.subject or "unknown"
+    return {
+    "username": result.subject or "unknown",
+    "user_id": result.user_id,
+}
