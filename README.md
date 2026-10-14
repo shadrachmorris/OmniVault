@@ -1,17 +1,8 @@
-# Microservices Starter Architecture
+# OmniVault
 
 This repository contains a starter skeleton for a 3-service architecture:
 
-\\\
-+---------------------+        validates tokens        +-----------------+
-¦   FastAPI Gateway   ¦ -----------------------------? ¦   Auth Service  ¦
-¦   (Service 1)       ¦                                ¦   (Service 2)   ¦
-¦                     ¦        forwards payload        +-----------------+
-¦                     ¦ -----------------------------? +---------------------+
-+---------------------+                                ¦ Data Processing     ¦
-                                                       ¦ Engine (Service 3)  ¦
-                                                       +---------------------+
-\\\
+OmniVault is a full-stack personal finance and shopping discovery platform featuring budgeting, bank account tracking, subscription management, cash-flow forecasting, personalized financial insights, and smart brand recommendations. Built with FastAPI, PostgreSQL, Docker, and JavaScript. Created by Shadrach Morris.
 
 ## Services
 
